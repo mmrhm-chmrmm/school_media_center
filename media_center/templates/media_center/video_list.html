@@ -1,0 +1,46 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="stack">
+    <div class="row" style="justify-content: space-between;">
+      <h2>Видео</h2>
+      {% if user.is_authenticated %}
+        <a class="btn" href="{% url 'media_center:video_create' %}">+ Добавить видео</a>
+      {% endif %}
+    </div>
+
+    {% for v in videos %}
+      <div class="card stack">
+        <div class="row" style="justify-content: space-between;">
+          <h3>{{ v.video_name }}</h3>
+          {% if user.is_staff %}
+            <a class="btn secondary" href="{% url 'media_center:video_delete' v.id %}">Удалить</a>
+          {% endif %}
+        </div>
+
+        <div class="video-wrap">
+          <iframe
+            src="{{ v.video_url }}"
+            title="{{ v.video_name }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="row" style="justify-content: space-between;">
+          <a class="btn secondary" href="{{ v.video_url }}" target="_blank" rel="noopener">Открыть</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="card center">Пока нет видео.</div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .video-wrap { position: relative; width: 100%; padding-top: 56.25%; border-radius: 16px; overflow: hidden; background: #000; }
+  .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+</style>
+{% endblock %}

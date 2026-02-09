@@ -1,0 +1,30 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="card" style="max-width: 620px; margin: 0 auto;">
+    <div class="stack">
+      <h2 class="center">Загрузка фото</h2>
+
+      <form method="post" enctype="multipart/form-data" class="stack">
+        {% csrf_token %}
+
+        <div class="field">
+          <label for="id_folder">Папка</label>
+          {{ form.folder }}
+        </div>
+
+        <div class="field">
+          <label for="id_file">Файл</label>
+          {{ form.file }}
+        </div>
+
+        <div class="row" style="justify-content: space-between;">
+          <a class="btn secondary" href="{% url 'media_center:gallery_folders' %}">Назад</a>
+          <button class="btn" type="submit">Загрузить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

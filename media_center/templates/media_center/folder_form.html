@@ -1,0 +1,24 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="card" style="max-width: 520px; margin: 0 auto;">
+    <div class="stack">
+      <h2 class="center">Новая папка</h2>
+
+      <form method="post" class="stack">
+        {% csrf_token %}
+        <div class="field">
+          <label for="id_folder_name">Название папки</label>
+          {{ form.folder_name }}
+        </div>
+
+        <div class="row" style="justify-content: space-between;">
+          <a class="btn secondary" href="{% url 'media_center:gallery_folders' %}">Назад</a>
+          <button class="btn" type="submit">Создать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

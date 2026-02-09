@@ -1,0 +1,40 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="card" style="max-width: 760px; margin: 0 auto;">
+    <div class="stack">
+      {% if mode == 'edit' %}
+        <h2 class="center">Редактирование статьи</h2>
+      {% else %}
+        <h2 class="center">Новая статья</h2>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="stack">
+        {% csrf_token %}
+
+        <div class="field">
+          <label for="id_title">Заголовок</label>
+          {{ form.title }}
+        </div>
+
+        <div class="field">
+          <label for="id_text">Текст</label>
+          {{ form.text }}
+        </div>
+
+        <div class="field">
+          <label for="id_photo">Фото (из галереи)</label>
+          {{ form.photo }}
+          <div class="muted">Если нужно — сначала загрузи фото в раздел «Фото».</div>
+        </div>
+
+        <div class="row" style="justify-content: space-between;">
+          <a class="btn secondary" href="{% url 'media_center:post_list' %}">Назад</a>
+          <button class="btn" type="submit">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

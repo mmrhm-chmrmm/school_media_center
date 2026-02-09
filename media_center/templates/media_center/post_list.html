@@ -1,0 +1,38 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="stack">
+    <div class="row" style="justify-content: space-between;">
+      <h2>Новостная лента</h2>
+      {% if user.is_authenticated %}
+        <a class="btn" href="{% url 'media_center:post_create' %}">+ Новая статья</a>
+      {% endif %}
+    </div>
+
+    {% for post in posts %}
+      <div class="card stack">
+        <div class="row" style="justify-content: space-between;">
+          <h3>{{ post.title }}</h3>
+          <span class="muted">{{ post.updated_at|date:"d.m.Y H:i" }}</span>
+        </div>
+
+	        <p style="line-height: 1.6;">
+	          {{ post.text|truncatechars:260 }}
+	        </p>
+
+        {% if post.photo %}
+          <img class="thumb" src="{{ post.photo.file.url }}" alt="" style="height:auto; max-height:380px;" />
+        {% endif %}
+
+	        <div class="row" style="justify-content: space-between;">
+	          <span class="muted">Автор: {{ post.author.username }}</span>
+	          <a class="btn secondary" href="{% url 'media_center:post_detail' post.id %}">Читать далее</a>
+	        </div>
+      </div>
+    {% empty %}
+      <div class="card center">Пока нет статей.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

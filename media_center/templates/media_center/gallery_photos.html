@@ -1,0 +1,94 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="stack">
+    <div class="row" style="justify-content: space-between;">
+      <h2>{{ folder.folder_name }}</h2>
+      <div class="row">
+        <a class="btn secondary" href="{% url 'media_center:gallery_folders' %}">Назад</a>
+        {% if user.is_authenticated %}
+          <a class="btn" href="{% url 'media_center:photo_upload' %}?folder={{ folder.id }}">Загрузить фото</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if photos %}
+      <div class="card" style="padding: 14px;">
+        <div class="slider" id="slider">
+          <button class="slider-btn" id="prevBtn" aria-label="Предыдущее">‹</button>
+
+          <div class="slider-stage">
+            <img id="sliderImage" class="slider-image" src="{{ photos.0.file.url }}" alt="" />
+          </div>
+
+          <button class="slider-btn" id="nextBtn" aria-label="Следующее">›</button>
+        </div>
+
+        <div class="row" style="justify-content: space-between; padding-top: 10px;">
+          <span class="muted" id="counter"></span>
+        </div>
+
+        <div class="thumb-row" id="thumbRow" style="margin-top: 12px;">
+          {% for p in photos %}
+            <button type="button" class="thumb-btn" data-src="{{ p.file.url }}">
+              <img src="{{ p.file.url }}" alt="" class="thumb" />
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <style>
+        .slider { display:flex; align-items:center; gap: 12px; }
+        .slider-stage { flex: 1; display:flex; justify-content:center; align-items:center; background:#f4f6ff; border-radius: 16px; min-height: 360px; padding: 10px; }
+        .slider-image { max-width: 100%; max-height: 520px; border-radius: 14px; object-fit: contain; }
+        .slider-btn { width: 44px; height: 44px; border-radius: 50%; border: 0; background:#111; color:#fff; font-size: 26px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .slider-btn:hover { opacity: .85; }
+        .thumb-row { display:flex; gap: 10px; overflow:auto; padding-bottom: 6px; }
+        .thumb-btn { border: 0; background: transparent; padding: 0; cursor:pointer; }
+        .thumb-btn.active img { outline: 3px solid #B4C0EF; outline-offset: 2px; }
+        .thumb { width: 110px; height: 70px; object-fit: cover; border-radius: 12px; }
+      </style>
+
+      <script>
+        (function(){
+          const thumbs = Array.from(document.querySelectorAll('.thumb-btn'));
+          const img = document.getElementById('sliderImage');
+          const counter = document.getElementById('counter');
+          const prev = document.getElementById('prevBtn');
+          const next = document.getElementById('nextBtn');
+
+          if (!thumbs.length) return;
+
+          let i = 0;
+
+          function setActive(index){
+            i = (index + thumbs.length) % thumbs.length;
+            const src = thumbs[i].dataset.src;
+            img.src = src;
+            thumbs.forEach((t, idx) => t.classList.toggle('active', idx === i));
+            counter.textContent = (i + 1) + ' / ' + thumbs.length;
+            // ensure active thumbnail visible
+            thumbs[i].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+          }
+
+          prev.addEventListener('click', () => setActive(i - 1));
+          next.addEventListener('click', () => setActive(i + 1));
+
+          thumbs.forEach((t, idx) => t.addEventListener('click', () => setActive(idx)));
+
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') setActive(i - 1);
+            if (e.key === 'ArrowRight') setActive(i + 1);
+          });
+
+          setActive(0);
+        })();
+      </script>
+
+    {% else %}
+      <div class="card center">В этой папке пока нет фото.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

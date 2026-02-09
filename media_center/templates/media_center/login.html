@@ -1,0 +1,33 @@
+{% extends "media_center/base.html" %}
+
+{% block content %}
+<div class="page">
+  <div class="card" style="max-width: 420px; margin: 0 auto;">
+    <div class="stack">
+      <h2 class="center">Вход</h2>
+      <form method="post" class="stack">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="card" style="border-color:#f2c7c7; background:#fff7f7;">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <div class="field">
+          <label for="id_username">Логин</label>
+          <input class="input" type="text" name="username" id="id_username" autocomplete="username" required>
+        </div>
+
+        <div class="field">
+          <label for="id_password">Пароль</label>
+          <input class="input" type="password" name="password" id="id_password" autocomplete="current-password" required>
+        </div>
+
+        <button class="btn" type="submit">Войти</button>
+        <p class="muted center">Нет аккаунта? <a href="{% url 'media_center:register' %}">Регистрация</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

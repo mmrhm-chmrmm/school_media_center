@@ -1,0 +1,31 @@
+{% extends "media_center/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page">
+  <div class="stack">
+    <div class="row" style="justify-content: space-between;">
+      <h2>Галерея</h2>
+      {% if user.is_authenticated %}
+        <div class="row">
+          <a class="btn secondary" href="{% url 'media_center:folder_create' %}">+ Папка</a>
+          <a class="btn" href="{% url 'media_center:photo_upload' %}">Загрузить фото</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="grid">
+      {% for folder in folders %}
+        <a class="card" style="text-decoration:none; color:inherit;" href="{% url 'media_center:gallery_photos' folder.id %}">
+          <div class="stack" style="gap:10px;">
+            <img class="folder-icon" src="{% static 'dir.png' %}" alt="Папка">
+            <div class="center" style="font-weight:700;">{{ folder.folder_name }}</div>
+          </div>
+        </a>
+      {% empty %}
+        <div class="card center">Папок пока нет.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
